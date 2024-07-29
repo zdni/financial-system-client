@@ -1,4 +1,7 @@
 import { Navigate, useRoutes } from 'react-router-dom'
+// auth
+import AuthGuard from '../auth/AuthGuard'
+import GuestGuard from '../auth/GuestGuard'
 // layouts
 import CompactLayout from '../layouts/compact'
 import DashboardLayout from '../layouts/dashboard'
@@ -18,6 +21,8 @@ import {
   Page403,
   Page404,
   Page500,
+  // Export
+  PDFPage,
 } from './elements'
 
 // ----------------------------------------------------------------------
@@ -28,14 +33,22 @@ export default function Router() {
     {
       path: 'auth',
       children: [
-        { path: 'login', element: <LoginPage /> },
+        { path: 'login', element: (
+          <GuestGuard>
+            <LoginPage />
+          </GuestGuard>
+        ) },
       ],
     },
 
     // User Routes
     {
       path: 'beranda',
-      element: <DashboardLayout />,
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
       children: [
         { element: <DashboardPage />, index: true },
         { 
@@ -64,12 +77,8 @@ export default function Router() {
     },
 
     // Main Routes
-    {
-      element: <DashboardLayout />,
-      children: [
-        { element: <DashboardPage />, index: true },
-      ],
-    },
+    { element: <Navigate to={'beranda'} replace />, index: true },
+    { element: <PDFPage />, path: 'export-pdf' },
     {
       element: <CompactLayout />,
       children: [

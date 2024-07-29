@@ -137,7 +137,7 @@ function Description() {
             repeat: Infinity,
           }}
         >
-          Ruang Baca TI UHO
+          Cash Draw Simple Recording System
         </StyledGradientText>
       </m.div>
 

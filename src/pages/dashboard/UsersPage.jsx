@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 // @mui
 import {
   Button,
@@ -66,8 +65,6 @@ export default function UsersPage() {
   const { themeStretch } = useSettingsContext()
   const { enqueueSnackbar } = useSnackbar()
 
-  const navigate = useNavigate()
-
   const {
     dense,
     page,
@@ -99,7 +96,7 @@ export default function UsersPage() {
   
   const [openDialogUserInactive, setOpenDialogUserInactive] = useState(false)
   const [openDialogUserActive, setOpenDialogUserActive] = useState(false)
-
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -113,9 +110,8 @@ export default function UsersPage() {
   const getLengthByRole = (role) => tableData.filter((item) => item.role === role).length
   const TABS = [
     { value: 'all', label: 'Semua', color: 'default', count: tableData.length },
-    { value: 'lecture', label: 'Dosen', color: 'success', count: getLengthByRole('lecture') },
+    { value: 'admin', label: 'Admin', color: 'success', count: getLengthByRole('admin') },
     { value: 'staff', label: 'Staf', color: 'info', count: getLengthByRole('staff') },
-    { value: 'student', label: 'Mahasiswa', color: 'warning', count: getLengthByRole('student') },
   ]
 
   const denseHeight = dense ? 56 : 76
@@ -153,7 +149,6 @@ export default function UsersPage() {
     setData(data)
     setOpenFormDialog(true)
   }
-  const handleViewRow = (id) => navigate(`${PATH_DASHBOARD.user.root}/${id}`)
 
   const handleSubmitCreate = async (data) => {
     if(TOKEN && isValidToken(TOKEN)) {
@@ -234,10 +229,10 @@ export default function UsersPage() {
   return (
     <>
       <Helmet>
-        <title>Daftar Pengguna | Ruang Baca TI UHO</title>
+        <title>Daftar Pengguna | Cash Draw Simple Recording System</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'xl'}>
         <CustomBreadcrumbs
           heading="Daftar Pengguna"
           links={[
@@ -246,11 +241,10 @@ export default function UsersPage() {
               href: PATH_DASHBOARD.root,
             },
             {
-              name: 'Pengguna',
-              href: PATH_DASHBOARD.user.list,
+              name: 'Manajemen',
             },
             {
-              name: 'Daftar',
+              name: 'Pengguna',
             },
           ]}
           action={
@@ -259,7 +253,7 @@ export default function UsersPage() {
               startIcon={<Iconify icon="eva:plus-fill" />}
               onClick={handleOpenFormDialog}
             >
-              Tambah Tipe Dokumen
+              Tambah Pengguna
             </Button>
           }
         />
@@ -352,7 +346,6 @@ export default function UsersPage() {
                       <TableRow
                         key={row._id}
                         row={row}
-                        onViewRow={() => handleViewRow(row._id)}
                         onEditRow={() => handleEditRow(row)}
                         onDeleteRow={() => handleSubmitDelete(row._id)}
                         onSelectRow={() => onSelectRow(row._id)}

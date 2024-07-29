@@ -14,7 +14,7 @@ export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found | Ruang Baca TI UHO</title>
+        <title> 404 Page Not Found | Cash Draw Simple Recording System</title>
       </Helmet>
 
       <MotionContainer>

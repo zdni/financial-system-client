@@ -6,7 +6,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title>Login | Ruang Baca TI UHO</title>
+        <title>Login | Cash Draw Simple Recording System</title>
       </Helmet>
 
       <Login />

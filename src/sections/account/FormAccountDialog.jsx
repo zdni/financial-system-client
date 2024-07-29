@@ -1,48 +1,50 @@
-import { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
-import { DatePicker } from '@mui/x-date-pickers'
 // form
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 // @mui
 import {
   Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
+  DialogContent,
+  DialogTitle,
   Stack,
-  TextField,
 } from '@mui/material'
 // component
-import FormProvider from '../../components/hook-form'
+import FormProvider, { RHFSelect, RHFTextField } from '../../components/hook-form'
 import { useSnackbar } from '../../components/snackbar'
+import { useEffect } from 'react'
 
 // ----------------------------------------------------------------------
 
-export default function FormReturnOrderDialog({
+export default function FormDataDialog({
+  title = 'Tambah',
   open,
   onClose,
   //
   onSubmitForm,
   setReload,
   //
-  data,
+  data = false,
   ...other
 }) {
+  const TYPE_OPTIONS = [
+    {label: 'Income', value: 'income'},
+    {label: 'Expense', value: 'expense'},
+  ]
   const { enqueueSnackbar } = useSnackbar()
   
   const FormSchema = Yup.object().shape({
-    date: Yup.string().required('Tanggal Pengembalian Wajib di Isi!'),
+    name: Yup.string().required('Nama Lengkap Wajib Diisi!'),
+    account_type: Yup.string().required('Tipe Akun Wajib Dipilih!'),
   })
   
-  const defaultValues = useMemo(
-    () => ({
-      _id: data?._id || null,
-      date: new Date(),
-    }), 
-    [data]
-  )
+  const defaultValues = { 
+    _id: data?._id || null, 
+    name: data?.name || '',
+    account_type: data?.account_type || 'income',
+  }
   
   const methods = useForm({
     resolver: yupResolver(FormSchema),
@@ -51,8 +53,8 @@ export default function FormReturnOrderDialog({
 
   const {
     handleSubmit,
-    control,
     reset,
+    // watch,
   } = methods
 
   const onSubmit = async (data) => {
@@ -71,6 +73,8 @@ export default function FormReturnOrderDialog({
     }
   }
 
+  // const values = watch()
+
   useEffect(() => {
     if(data) {
       reset(defaultValues)
@@ -83,26 +87,18 @@ export default function FormReturnOrderDialog({
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle sx={{ p: (theme) => theme.spacing(3, 3, 2, 3) }}> Pengembalian Peminjaman </DialogTitle>
+        <DialogTitle sx={{ p: (theme) => theme.spacing(3, 3, 2, 3) }}> {title} </DialogTitle>
 
         <DialogContent dividers sx={{ pt: 1, pb: 0, border: 'none' }}>
-          <Stack spacing={3}>
-            <Controller
-              name="date"
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <DatePicker
-                  label="Tanggal Pengembalian"
-                  value={field.value}
-                  onChange={(newValue) => {
-                    field.onChange(newValue);
-                  }}
-                  renderInput={(params) => (
-                    <TextField   {...params} fullWidth error={!!error} helperText={error?.message} />
-                  )}
-                />
-              )}
-            />
+          <Stack spacing={1}>
+            <RHFTextField name="name" label="Nama Akun" />
+            <RHFSelect name="account_type" label="Tipe">
+              {TYPE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </RHFSelect>
           </Stack>
         </DialogContent>
 

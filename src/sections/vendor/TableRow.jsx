@@ -14,48 +14,27 @@ import {
 // utils
 // components
 import Iconify from '../../components/iconify'
-import Label from '../../components/label/Label'
 import { CustomAvatar } from '../../components/custom-avatar'
 import MenuPopover from '../../components/menu-popover'
 import ConfirmDialog from '../../components/confirm-dialog'
 
 // ----------------------------------------------------------------------
-const LABEL_OF_ROLE = {
-  superadmin: 'Administrator',
-  admin: 'Administrator',
-  staff: 'Staf',
-}
-const LABEL_OF_STATUS = {
-  active: 'Aktif',
-  inactive: 'Tidak Aktif',
-}
-
 export default function UserTableRow({
   row,
   selected,
   onSelectRow,
   onEditRow,
   onDeleteRow,
-  onResetPwd,
 }) {
   const [openConfirm, setOpenConfirm] = useState(false)
-  const [openResetPwd, setOpenResetPwd] = useState(false)
 
   const [openPopover, setOpenPopover] = useState(null)
 
   const handleOpenConfirm = () => setOpenConfirm(true)
   const handleCloseConfirm = () => setOpenConfirm(false)
 
-  const handleOpenResetPwd = () => setOpenResetPwd(true)
-  const handleCloseResetPwd = () => setOpenResetPwd(false)
-
   const handleOpenPopover = (event) => setOpenPopover(event.currentTarget)
   const handleClosePopover = () => setOpenPopover(null)
-
-  const handleSubmitResetPwd = () => {
-    onResetPwd()
-    handleCloseResetPwd()
-  }
 
   return (
     <>
@@ -72,25 +51,9 @@ export default function UserTableRow({
               <Typography variant="subtitle2" noWrap>
                 {row.name}
               </Typography>
-              <Typography variant="body2" noWrap sx={{ color: 'text.disabled' }}>
-                {row.email}
-              </Typography>
+
             </div>
           </Stack>
-        </TableCell>
-
-        <TableCell align="left">{LABEL_OF_ROLE[row.role]}</TableCell>
-
-        <TableCell align="left">
-          <Label
-            variant="soft"
-            color={
-              (row.status === 'active' && 'success') ||
-              (row.status === 'inactive' && 'warning')
-            }
-          >
-            {LABEL_OF_STATUS[row.status]}
-          </Label>
         </TableCell>
 
         <TableCell align="right">
@@ -116,16 +79,6 @@ export default function UserTableRow({
           Ubah
         </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            handleOpenResetPwd()
-            handleClosePopover()
-          }}
-        >
-          <Iconify icon="eva:refresh-outline" />
-          Reset Pwd
-        </MenuItem>
-
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem
@@ -144,22 +97,10 @@ export default function UserTableRow({
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
-        content="Apakah Anda yakin ingin menghapus Pengguna?"
+        content="Apakah Anda yakin ingin menghapus Vendor?"
         action={
           <Button variant="contained" color="error" onClick={onDeleteRow}>
             Hapus
-          </Button>
-        }
-      />
-
-      <ConfirmDialog
-        open={openResetPwd}
-        onClose={handleCloseResetPwd}
-        title="Reset Password"
-        content="Apakah Anda yakin ingin me-reset password Pengguna?"
-        action={
-          <Button variant="contained" color="error" onClick={handleSubmitResetPwd}>
-            Reset
           </Button>
         }
       />

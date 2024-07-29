@@ -21,10 +21,9 @@ const StyledRoot = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 const VALUE_OF_ROLE = {
+  superadmin: 'Administrator',
   admin: 'Administrator',
-  lecture: 'Dosen',
   staff: 'Staf',
-  student: 'Mahasiswa'
 }
 
 export default function NavAccount() {

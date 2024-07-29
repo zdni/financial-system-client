@@ -35,7 +35,7 @@ const navConfig = [
     items: [
       { title: 'Akun', path: PATH_DASHBOARD.management.account, icon: ICONS.account, roles: ['superadmin', 'admin', 'staff'] },
       { title: 'Vendor', path: PATH_DASHBOARD.management.vendor, icon: ICONS.vendor, roles: ['superadmin', 'admin', 'staff'] },
-      { title: 'Pengguna', path: PATH_DASHBOARD.user.list, icon: ICONS.user, roles: ['superadmin', 'admin'] },
+      { title: 'Pengguna', path: PATH_DASHBOARD.management.user, icon: ICONS.user, roles: ['superadmin', 'admin'] },
     ],
   },
 ]

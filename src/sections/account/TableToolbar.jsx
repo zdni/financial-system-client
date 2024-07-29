@@ -5,7 +5,6 @@ import Iconify from '../../components/iconify'
 
 // ----------------------------------------------------------------------
 
-
 export default function InvoiceTableToolbar({
   isFiltered,
   filterName,
@@ -22,12 +21,11 @@ export default function InvoiceTableToolbar({
       }}
       sx={{ px: 2.5, py: 3 }}
     >
-
       <TextField
         fullWidth
         value={filterName}
         onChange={onFilterName}
-        placeholder="Cari Pengguna..."
+        placeholder="Cari Akun..."
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

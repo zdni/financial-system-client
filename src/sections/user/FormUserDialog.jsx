@@ -31,29 +31,21 @@ export default function FormDataDialog({
   ...other
 }) {
   const ROLE_OPTIONS = [
-    {label: 'Mahasiswa', value: 'student'},
-    {label: 'Dosen', value: 'lecture'},
+    {label: 'Admin', value: 'admin'},
     {label: 'Staf', value: 'staff'},
-  ]
-  const STATUS_OPTIONS = [
-    {label: 'Aktif', value: 'active'},
-    {label: 'Tidak Aktif', value: 'inactive'},
   ]
   const { enqueueSnackbar } = useSnackbar()
   
   const FormSchema = Yup.object().shape({
     name: Yup.string().required('Nama Lengkap Wajib Diisi!'),
     email: Yup.string().required('Email Wajib Diisi!'),
-    idNumber: Yup.string().required('ID Number Wajib Diisi!'),
   })
   
   const defaultValues = { 
     _id: data?._id || null, 
     name: data?.name || '',
     email: data?.email || '',
-    classYear: data?.classYear || 0,
-    idNumber: data?.idNumber || '',
-    role: data?.role || 'student',
+    role: data?.role || 'admin',
     status: data?.status || 'active',
   }
   
@@ -65,7 +57,7 @@ export default function FormDataDialog({
   const {
     handleSubmit,
     reset,
-    watch,
+    // watch,
   } = methods
 
   const onSubmit = async (data) => {
@@ -84,7 +76,7 @@ export default function FormDataDialog({
     }
   }
 
-  const values = watch()
+  // const values = watch()
 
   useEffect(() => {
     if(data) {
@@ -102,25 +94,14 @@ export default function FormDataDialog({
 
         <DialogContent dividers sx={{ pt: 1, pb: 0, border: 'none' }}>
           <DialogContentText sx={{ mb: '20px' }}>
-            Buat Pengguna Baru 
-            <br/><span style={{ fontSize: '10px' }} >*Default Password adalah email yang didaftarkan</span>
+            {title} 
+            <br/><span style={{ fontSize: '10px' }} >*Default Password adalah email yang didaftarkan (sebelum @)</span>
           </DialogContentText>
           <Stack spacing={1}>
             <RHFTextField name="name" label="Nama Lengkap" />
             <RHFTextField name="email" label="Email" />
-            <RHFTextField name="idNumber" label="ID Number" />
-            {values.role === 'student' && (
-              <RHFTextField name="classYear" label="Tahun Angkatan" />
-            )}
             <RHFSelect name="role" label="Role">
               {ROLE_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </RHFSelect>
-            <RHFSelect name="status" label="Status">
-              {STATUS_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>

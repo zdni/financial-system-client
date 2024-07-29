@@ -107,7 +107,7 @@ export default function Footer() {
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
-          © Ruang Baca TI UHO.
+          © Cash Draw Simple Recording System.
         </Typography>
       </Container>
     </Box>

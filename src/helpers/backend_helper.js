@@ -23,6 +23,7 @@ export const getTransactionGroup = config => get(url.TRANSACTIONS_GROUP, config)
 export const createTransaction = (data, config) => post(url.TRANSACTIONS, data, config)
 export const updateTransaction = (id, data, config) =>  put(`${url.TRANSACTIONS}/${id}`, data, config)
 export const deleteTransaction = (id, config) =>  del(`${url.TRANSACTIONS}/${id}`, config)
+export const exportExcelTransaction = config =>  get(`${url.TRANSACTIONS}/export/xlsx`, config)
 
 //  .............................. ACCOUNT ....................................
 export const getAccounts = config => get(url.ACCOUNTS, config)

@@ -5,14 +5,11 @@ import { useParams } from 'react-router-dom'
 import { useAuthContext } from '../../auth/useAuthContext'
 // @mui
 import { Tab, Tabs, Container, Box } from '@mui/material'
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths'
 // components
 import Iconify from '../../components/iconify'
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs'
 import { useSettingsContext } from '../../components/settings'
 // sections
-import { OrderList } from '../../sections/order'
 import { FormUserChangePwd, UserProfile } from '../../sections/user'
 import { getUser } from '../../helpers/backend_helper'
 
@@ -62,21 +59,12 @@ export default function UserPage() {
         component: <FormUserChangePwd user={data} />
       })
     }
-
-    if(!['admin', 'staff'].includes(data?.role) || id) {
-      TABS.push({
-        value: 'list-of-loans',
-        label: 'Peminjaman',
-        icon: <Iconify icon="eva:calendar-fill" />,
-        component: <OrderList userId={data?._id} />
-      })
-    }
   }
 
   return (
     <>
       <Helmet>
-        <title>Pengguna | Ruang Baca TI UHO</title>
+        <title>Pengguna | Cash Draw Simple Recording System</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -84,7 +72,7 @@ export default function UserPage() {
           heading="Profil"
           links={[
             { name: 'Dashboard' },
-            { name: 'Pengguna', href: PATH_DASHBOARD.user.list },
+            { name: 'Pengguna' },
             { name: data?.name },
           ]}
         />

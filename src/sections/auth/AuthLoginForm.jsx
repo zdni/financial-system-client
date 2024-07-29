@@ -44,7 +44,6 @@ export default function AuthLoginForm() {
   } = methods
 
   const onSubmit = async (data) => {
-    console.log(data)
     const response = await login(data.email, data.password)
     const { message, status } = response
 
@@ -98,19 +97,6 @@ export default function AuthLoginForm() {
       >
         Masuk
       </LoadingButton>
-      <Link
-        to={'/'}
-        component={RouterLink}
-        color="inherit"
-        variant="body2"
-        sx={{
-          textAlign: 'center',
-          width: '100%',
-          display: 'block'
-        }}
-      >
-        Kembali ke Halaman Utama
-      </Link>
     </FormProvider>
   )
 }

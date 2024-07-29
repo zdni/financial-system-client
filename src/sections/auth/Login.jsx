@@ -16,7 +16,7 @@ export default function Login() {
     return (
       <LoginLayout>
         <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
-          <Typography variant="h4">Ruang Baca TI UHO</Typography>
+          <Typography variant="h4">Cash Draw Simple Recording System</Typography>
         </Stack>
   
         <AuthLoginForm />

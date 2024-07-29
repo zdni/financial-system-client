@@ -30,9 +30,10 @@ export const UserPage = Loadable(lazy(() => import('../pages/dashboard/UserPage'
 export const UsersPage = Loadable(lazy(() => import('../pages/dashboard/UsersPage')))
 export const VendorsPage = Loadable(lazy(() => import('../pages/dashboard/VendorsPage')))
 
+// EXPORT
+export const PDFPage = Loadable(lazy(() => import('../pages/export/PDFPage')))
 
 // MAIN
-export const HomePage = Loadable(lazy(() => import('../pages/HomePage')))
 export const Page403 = Loadable(lazy(() => import('../pages/Page403')))
 export const Page404 = Loadable(lazy(() => import('../pages/Page404')))
 export const Page500 = Loadable(lazy(() => import('../pages/Page500')))
