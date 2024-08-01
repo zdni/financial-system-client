@@ -6,7 +6,7 @@ import { getAccount, getAccounts, getVendors } from "../../helpers/backend_helpe
 import Iconify from "../../components/iconify";
 import { useSnackbar } from '../../components/snackbar'
 
-const TransactionFormLine = ({ data, remove, setTransactions, setComplete }) => {
+const TransactionFormLine = ({ data, deleteRow, form, remove, setComplete, setDeleteRow, setTransactions }) => {
   const TOKEN = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
   const { enqueueSnackbar } = useSnackbar()
 
@@ -67,6 +67,7 @@ const TransactionFormLine = ({ data, remove, setTransactions, setComplete }) => 
     }))
   }
 
+
   return (
     <Stack spacing={1} direction='row'>
       <TextField
@@ -75,7 +76,7 @@ const TransactionFormLine = ({ data, remove, setTransactions, setComplete }) => 
         fullWidth
         value={transaction?.label}
         onChange={onChangeTransaction}
-        disabled={save}
+        disabled={save || (form === 'view')}
       />
       <TextField
         select
@@ -85,7 +86,7 @@ const TransactionFormLine = ({ data, remove, setTransactions, setComplete }) => 
         label="Akun"
         defaultValue={transaction?.accountId}
         onChange={(event) => onChangeAccountId(event.target.value)}
-        disabled={save}
+        disabled={save || (form === 'view')}
       >
         {accounts.map((option) => (
           <option key={option._id} value={option._id}>
@@ -101,7 +102,7 @@ const TransactionFormLine = ({ data, remove, setTransactions, setComplete }) => 
         label="Vendor"
         defaultValue={transaction?.vendorId}
         onChange={onChangeTransaction}
-        disabled={save}
+        disabled={save || (form === 'view')}
       >
         <option key='' value=''></option>
         {vendors.map((option) => (
@@ -117,7 +118,7 @@ const TransactionFormLine = ({ data, remove, setTransactions, setComplete }) => 
         value={transaction?.debit}
         onChange={onChangeTransaction}
         type="number"
-        disabled={transaction.type !== 'income' || save}
+        disabled={transaction.type !== 'income' || save || (form === 'view')}
       />
       <TextField
         name='credit'
@@ -126,7 +127,7 @@ const TransactionFormLine = ({ data, remove, setTransactions, setComplete }) => 
         value={transaction?.credit}
         onChange={onChangeTransaction}
         type="number"
-        disabled={transaction.type !== 'expense' || save}
+        disabled={transaction.type !== 'expense' || save || (form === 'view')}
       />
       {
         !save && (
@@ -158,7 +159,11 @@ const TransactionFormLine = ({ data, remove, setTransactions, setComplete }) => 
       <Button
         color="error"
         sx={{ flexShrink: 0 }}
-        onClick={remove}
+        onClick={() => {
+          const rows = [...deleteRow, transaction._id]
+          setDeleteRow(rows); 
+          remove(); 
+        }}
         startIcon={<Iconify icon="eva:trash-2-outline" />}
       />
     </Stack>

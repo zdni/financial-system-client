@@ -12,7 +12,7 @@ import {
   Stack,
 } from '@mui/material'
 // component
-import FormProvider, { RHFDatePicker, RHFSelect, RHFSelectDepend, RHFTextField } from '../../components/hook-form'
+import FormProvider, { RHFSelect, RHFSelectDepend, RHFTextField } from '../../components/hook-form'
 import { useSnackbar } from '../../components/snackbar'
 import { useEffect, useState } from 'react'
 import { isValidToken } from '../../auth/utils'
@@ -50,7 +50,7 @@ export default function FormDataDialog({
     label: data?.label || '',
     debit: data?.debit || 0,
     credit: data?.credit || 0,
-    state: data?.state || 'posted',
+    transactionId: data?.transactionId?._id || '',
   }
   
   const methods = useForm({
@@ -117,7 +117,6 @@ export default function FormDataDialog({
 
         <DialogContent dividers sx={{ pt: 1, pb: 0, border: 'none' }}>
           <Stack spacing={1}>
-            <RHFDatePicker name="date" label="Tanggal" />
             <RHFTextField name="label" label="Label" />
             <RHFSelectDepend name="accountId" label="Akun" depend={(value) => onChangeAccount(value)}>
               {accounts.map((option) => (

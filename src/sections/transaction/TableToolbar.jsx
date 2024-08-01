@@ -8,16 +8,14 @@ import Iconify from '../../components/iconify'
 
 const INPUT_WIDTH = 160;
 
-export default function InvoiceTableToolbar({
+export default function TransactionTableToolbar({
   isFiltered,
   filterEndDate,
-  filterAccount,
+  filterName,
   filterStartDate,
-  filterVendor,
-  onFilterAccount,
+  onFilterName,
   onFilterEndDate,
   onFilterStartDate,
-  onFilterVendor,
   onResetFilter,
 }) {
   return (
@@ -63,23 +61,9 @@ export default function InvoiceTableToolbar({
       
       <TextField
         fullWidth
-        value={filterAccount}
-        onChange={onFilterAccount}
-        placeholder="Cari Akun..."
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-            </InputAdornment>
-          ),
-        }}
-      />
-
-      <TextField
-        fullWidth
-        value={filterVendor}
-        onChange={onFilterVendor}
-        placeholder="Cari Vendor..."
+        value={filterName}
+        onChange={onFilterName}
+        placeholder="Cari Transaksi..."
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

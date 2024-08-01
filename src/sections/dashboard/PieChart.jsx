@@ -8,7 +8,7 @@ import { useSnackbar } from '../../components/snackbar';
 // utils
 import { fCurrency } from '../../utils/formatNumber';
 import { fDate } from '../../utils/formatTime';
-import { getTransactions } from '../../helpers/backend_helper';
+import { getTransactionLines } from '../../helpers/backend_helper';
 import { DatePicker } from '@mui/x-date-pickers';
 
 // ----------------------------------------------------------------------
@@ -99,7 +99,7 @@ export default function PieChart() {
       const endDateParse = Date.parse(endDate)
       const startDateParse = Date.parse(startDate);
   
-      const response = await getTransactions({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDateParse, endDate: endDateParse, sort: 'date' } })
+      const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDateParse, endDate: endDateParse, sort: 'date' } })
       const { data, message, status } = response;
       if(status) {
         let income = 0;

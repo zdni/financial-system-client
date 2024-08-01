@@ -39,7 +39,6 @@ import { PATH_DASHBOARD } from '../../routes/paths'
 // sections
 import { 
   ExportTransactionDialog,
-  FormTransactionDialog,
   TableRow, 
   TableToolbar 
 } from '../../sections/transaction'
@@ -50,18 +49,14 @@ import {
   deleteTransaction,
   exportExcelTransaction,
   getTransactions, 
-  updateTransaction,
 } from '../../helpers/backend_helper'
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'date', label: 'Tanggal', align: 'left' },
-  { id: 'label', label: 'Label', align: 'left' },
-  { id: 'vendorId', label: 'Vendor', align: 'left' },
-  { id: 'accountId', label: 'Akun', align: 'left' },
-  { id: 'income', label: 'Income', align: 'right' },
-  { id: 'expense', label: 'Expense', align: 'right' },
+  { id: 'name', label: 'Label', align: 'left' },
+  { id: 'state', label: 'Status', align: 'left' },
   { id: '' },
 ]
 
@@ -94,36 +89,28 @@ export default function TransactionsPage() {
   const [reload, setReload] = useState(true)
   const [tableData, setTableData] = useState([])
 
-  const [openFormDialog, setOpenFormDialog] = useState(false)
-  const [data, setData] = useState(false)
-  
-  const handleCloseFormDialog = () => setOpenFormDialog(false)
-  
   // Filter Data
-  const [filterAccount, setFilterAccount] = useState('')
   const [filterEndDate, setFilterEndDate] = useState(null)
+  const [filterName, setFilterName] = useState('')
+  const [filterState, setFilterState] = useState('all')
   const [filterStartDate, setFilterStartDate] = useState(null)
-  const [filterAccountType, setFilterAccountType] = useState('all')
-  const [filterVendor, setFilterVendor] = useState('')
   const [openExportDialog, setOpenExportDialog] = useState(false)
   
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
-    filterAccount,
-    filterAccountType,
+    filterName,
+    filterState,
     filterEndDate,
     filterStartDate,
-    filterVendor,
   })
   
-  const isFiltered = filterAccount !== '' || filterAccountType !== 'all' || filterVendor !== '' || (!!filterStartDate && !!filterEndDate);
+  const isFiltered = filterName !== '' || filterState !== 'all' || (!!filterStartDate && !!filterEndDate);
   const isNotFound = 
-    (!dataFiltered.length && !!filterAccount) ||
-    (!dataFiltered.length && !!filterAccountType) ||
+    (!dataFiltered.length && !!filterName) ||
+    (!dataFiltered.length && !!filterState) ||
     (!dataFiltered.length && !!filterEndDate) ||
-    (!dataFiltered.length && !!filterStartDate) ||
-    (!dataFiltered.length && !!filterVendor)
+    (!dataFiltered.length && !!filterStartDate)
   
   const denseHeight = dense ? 56 : 76
 
@@ -132,45 +119,31 @@ export default function TransactionsPage() {
   }
   const handleCloseExportDialog = () => setOpenExportDialog(false);
 
-  const getLengthByAccountType = (type) =>
-    tableData.filter((item) => item.accountId.account_type === type).length;
+  const getLengthByState = (state) =>
+    tableData.filter((item) => item.state === state).length;
 
   const TABS = [
     { value: 'all', label: 'Semua', color: 'default', count: tableData.length },
-    { value: 'income', label: 'Income', color: 'success', count: getLengthByAccountType('income') },
-    { value: 'expense', label: 'Expense', color: 'info', count: getLengthByAccountType('expense') },
+    { value: 'draft', label: 'Draft', color: 'success', count: getLengthByState('draft') },
+    { value: 'posted', label: 'Post', color: 'info', count: getLengthByState('posted') },
+    { value: 'cancel', label: 'Batal', color: 'warning', count: getLengthByState('cancel') },
   ]
 
-  const handleFilterAccount = (event) => {
-    setPage(0)
-    setFilterAccount(event.target.value)
-  }
-
-  const handleFilterAccountType = (event, newValue) => {
+  const handleFilterName = (event, newValue) => {
     setPage(0);
-    setFilterAccountType(newValue);
+    setFilterName(event.target.value);
   }
 
-  const handleFilterVendor = (event) => {
-    setPage(0)
-    setFilterVendor(event.target.value)
+  const handleFilterState = (event, newValue) => {
+    setPage(0);
+    setFilterState(newValue);
   }
 
   const handleResetFilter = () => {
-    setFilterAccount('')
-  }
-
-  const handleEditRow = (data) => {
-    setData(data)
-    setOpenFormDialog(true)
-  }
-
-  const handleSubmitUpdate = async (data) => {
-    if(TOKEN && isValidToken(TOKEN)) {
-      const response = await updateTransaction(data._id, data, { headers: { authorization: `Bearer ${TOKEN}` } })
-      return { ...response.data, code: response.status}
-    }
-    return { message: "TOKEN_REQUIRED", status: false }
+    setFilterEndDate(null)
+    setFilterName('')
+    setFilterStartDate(null)
+    setFilterState('all')
   }
 
   const handleSubmitDelete = async (id) => {
@@ -184,8 +157,13 @@ export default function TransactionsPage() {
   }
 
   const handleSubmitMultipleDelete = () => {
-    selected.forEach(async (id) => {
-      await handleSubmitDelete(id)
+    selected.forEach(async (row) => {
+      const {_id, state, name} = row;
+      if(state === 'cancel') {
+        await handleSubmitDelete(_id)
+      } else {
+        enqueueSnackbar(`Gagal menghapus transaksi ${name} karena tidak dalam status Draft!`, { variant: 'error' });
+      }
     });
     setReload(true)
     setSelected([])
@@ -265,8 +243,8 @@ export default function TransactionsPage() {
 
         <Card>
           <Tabs
-            value={filterAccountType}
-            onChange={handleFilterAccountType}
+            value={filterState}
+            onChange={handleFilterState}
             sx={{
               px: 2,
               bgcolor: 'background.neutral',
@@ -290,12 +268,10 @@ export default function TransactionsPage() {
           
           <TableToolbar
             isFiltered={isFiltered}
-            filterAccount={filterAccount}
             filterEndDate={filterEndDate}
+            filterName={filterName}
             filterStartDate={filterStartDate}
-            filterVendor={filterVendor}
-            onFilterAccount={handleFilterAccount}
-            onFilterVendor={handleFilterVendor}
+            onFilterName={handleFilterName}
             onFilterEndDate={(newValue) => {
               const date = new Date(newValue); 
               const offset = new Date().getTimezoneOffset()/-60;
@@ -321,7 +297,7 @@ export default function TransactionsPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row._id)
+                  tableData.map((row) => row)
                 )
               }
               action={
@@ -347,7 +323,7 @@ export default function TransactionsPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row._id)
+                      tableData.map((row) => row)
                     )
                   }
                 />
@@ -359,11 +335,9 @@ export default function TransactionsPage() {
                       <TableRow
                         key={row._id}
                         row={row}
-                        onEditRow={() => handleEditRow(row)}
-                        onDeleteRow={() => handleSubmitDelete(row._id)}
+                        setReload={setReload}
                         onSelectRow={() => onSelectRow(row._id)}
                         selected={selected.includes(row._id)}
-                        setReload={setReload}
                       />
                     ))}
 
@@ -391,15 +365,6 @@ export default function TransactionsPage() {
         </Card>
       </Container>
 
-      <FormTransactionDialog 
-        title={'Ubah Transaksi'}
-        open={openFormDialog} 
-        onClose={handleCloseFormDialog}
-        onSubmitForm={handleSubmitUpdate}
-        data={data}
-        setReload={setReload}
-      />
-
       <ExportTransactionDialog 
         open={openExportDialog} 
         onClose={handleCloseExportDialog}
@@ -415,11 +380,10 @@ export default function TransactionsPage() {
 function applyFilter({
   inputData,
   comparator,
-  filterAccount,
-  filterAccountType,
   filterEndDate,
+  filterName,
   filterStartDate,
-  filterVendor,
+  filterState,
 }) {
   const stabilizedThis = inputData.map((el, index) => [el, index])
 
@@ -431,26 +395,16 @@ function applyFilter({
 
   inputData = stabilizedThis.map((el) => el[0])
 
-  if (filterAccount) {
+  if (filterName) {
     inputData = inputData.filter(
       (data) =>
-        data.accountId.name.toLowerCase().indexOf(filterAccount.toLowerCase()) !== -1
+        data.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     )
   }
-  if (filterAccountType !== 'all') {
+  if (filterState !== 'all') {
     inputData = inputData.filter(
       (data) =>
-        data.accountId.account_type === filterAccountType
-    )
-  }
-  if (filterVendor) {
-    inputData = inputData.filter(
-      (data) => {
-        if(data.vendorId) {
-          return data.vendorId.name.toLowerCase().indexOf(filterVendor.toLowerCase()) !== -1
-        }
-        return false
-      }
+        data.state === filterState
     )
   }
 

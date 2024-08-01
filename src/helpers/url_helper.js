@@ -14,4 +14,8 @@ export const VENDORS = '/vendors'
 
 // TRANSACTION
 export const TRANSACTIONS = 'transactions'
+export const TRANSACTION_LINE = 'transaction/lines'
 export const TRANSACTIONS_GROUP = 'transactions/group'
+
+// EXPORT
+export const EXCEL = 'exports'

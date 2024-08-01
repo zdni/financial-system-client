@@ -18,12 +18,19 @@ export const deleteUser = (id, config) => del(`${url.USERS}/${id}`, config)
 
 //  .............................. TRANSACTION ....................................
 export const getTransactions = config => get(url.TRANSACTIONS, config)
-export const getTransaction = id => get(`${url.TRANSACTIONS}/${id}`)
+export const getTransaction = (id, config) => get(`${url.TRANSACTIONS}/${id}`, config)
 export const getTransactionGroup = config => get(url.TRANSACTIONS_GROUP, config)
 export const createTransaction = (data, config) => post(url.TRANSACTIONS, data, config)
 export const updateTransaction = (id, data, config) =>  put(`${url.TRANSACTIONS}/${id}`, data, config)
 export const deleteTransaction = (id, config) =>  del(`${url.TRANSACTIONS}/${id}`, config)
 export const exportExcelTransaction = config =>  get(`${url.TRANSACTIONS}/export/xlsx`, config)
+
+//  .............................. TRANSACTION LINE ....................................
+export const getTransactionLines = config => get(url.TRANSACTION_LINE, config)
+export const getTransactionLine = (id, config) => get(`${url.TRANSACTION_LINE}/${id}`, config)
+export const createTransactionLine = (data, config) => post(url.TRANSACTION_LINE, data, config)
+export const updateTransactionLine = (id, data, config) =>  put(`${url.TRANSACTION_LINE}/${id}`, data, config)
+export const deleteTransactionLine = (id, config) =>  del(`${url.TRANSACTION_LINE}/${id}`, config)
 
 //  .............................. ACCOUNT ....................................
 export const getAccounts = config => get(url.ACCOUNTS, config)
@@ -38,3 +45,6 @@ export const getVendor = (id, config) => get(`${url.VENDORS}/${id}`, config)
 export const createVendor = (data, config) => post(url.VENDORS, data, config)
 export const updateVendor = (id, data, config) =>  put(`${url.VENDORS}/${id}`, data, config)
 export const deleteVendor = (id, config) => del(`${url.VENDORS}/${id}`, config)
+
+//  .............................. VENDOR ....................................
+export const downloadExcel = (file, config) => get(`${url.EXCEL}/${file}`, config)

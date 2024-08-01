@@ -8,7 +8,7 @@ import { useSnackbar } from '../../components/snackbar';
 // utils
 import { fCurrency } from '../../utils/formatNumber';
 import { fDate } from '../../utils/formatTime';
-import { getTransactions } from '../../helpers/backend_helper';
+import { getTransactionLines } from '../../helpers/backend_helper';
 import { DatePicker } from '@mui/x-date-pickers';
 
 // filter
@@ -114,7 +114,7 @@ export default function BarChart() {
     // filter start date and end date
     const date = Date.parse(day);
 
-    const response = await getTransactions({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: date, endDate: date } })
+    const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: date, endDate: date } })
     setDataDashboard(response);
   }
 
@@ -129,7 +129,7 @@ export default function BarChart() {
     firstDay.setHours(offset,0,0);
     const startDate = Date.parse(firstDay);
 
-    const response = await getTransactions({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDate, endDate: endDate, sort: 'date' } })
+    const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDate, endDate: endDate, sort: 'date' } })
     setDataDashboard(response);
   }
 
@@ -141,7 +141,7 @@ export default function BarChart() {
     const endDate = Date.parse(today)
     const startDate = Date.parse(dateOneYearAgo);
 
-    const response = await getTransactions({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDate, endDate: endDate, sort: 'date' } })
+    const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDate, endDate: endDate, sort: 'date' } })
     setDataDashboard(response);
   }
 

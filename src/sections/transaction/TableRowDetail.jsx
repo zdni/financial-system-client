@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState } from 'react';
+
 // @mui
 import {
   Stack,
@@ -16,21 +17,18 @@ import {
 import ConfirmDialog from '../../components/confirm-dialog'
 import Iconify from '../../components/iconify'
 import Label from '../../components/label/Label'
-import { CustomAvatar } from '../../components/custom-avatar'
 import MenuPopover from '../../components/menu-popover'
+// utils
+import { fCurrency } from '../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
-const LABEL_OF_TYPE = {
-  income: 'Income',
-  expense: 'Expense',
-}
 
-export default function UserTableRow({
+export default function TableRowDetail({
+  onDeleteRow,
+  onEditRow,
+  onSelectRow,
   row,
   selected,
-  onSelectRow,
-  onEditRow,
-  onDeleteRow,
 }) {
   const [openConfirm, setOpenConfirm] = useState(false)
 
@@ -42,7 +40,6 @@ export default function UserTableRow({
   const handleOpenPopover = (event) => setOpenPopover(event.currentTarget)
   const handleClosePopover = () => setOpenPopover(null)
 
-
   return (
     <>
       <TableRow hover selected={selected}>
@@ -52,27 +49,56 @@ export default function UserTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <CustomAvatar name={row.name} />
-
             <div>
               <Typography variant="subtitle2" noWrap>
-                {row.name}
+                {row.label}
               </Typography>
-
             </div>
           </Stack>
         </TableCell>
 
-        <TableCell align="left">
-          <Label
-            variant="soft"
-            color={
-              (row.account_type === 'income' && 'success') ||
-              (row.account_type === 'expense' && 'primary')
-            }
-          >
-            {LABEL_OF_TYPE[row.account_type]}
-          </Label>
+        <TableCell>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <div>
+              <Typography variant="subtitle2" noWrap>
+                {row.accountId?.name}
+              </Typography>
+            </div>
+          </Stack>
+        </TableCell>
+
+        <TableCell>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <div>
+              <Typography variant="subtitle2" noWrap>
+                {row.vendorId?.name}
+              </Typography>
+            </div>
+          </Stack>
+        </TableCell>
+
+        <TableCell align="right">
+          {
+            row.accountId.account_type === 'income' &&
+            <Label 
+              variant="soft"
+              color='primary'
+            >
+              {fCurrency(row.debit)}
+            </Label>
+          }
+        </TableCell>
+
+        <TableCell align="right">
+          {
+            row.accountId.account_type === 'expense' &&
+            <Label 
+              variant="soft"
+              color='warning'
+            >
+              {fCurrency(row.credit)}
+            </Label>
+          }
         </TableCell>
 
         <TableCell align="right">
@@ -116,7 +142,7 @@ export default function UserTableRow({
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
-        content="Apakah Anda yakin ingin menghapus Akun?"
+        content="Apakah Anda yakin ingin menghapus baris Transaksi?"
         action={
           <Button variant="contained" color="error" onClick={onDeleteRow}>
             Hapus

@@ -12,6 +12,7 @@ import {
   // Dashboard
   AccountsPage,
   DashboardPage,
+  TransactionDetailPage,
   TransactionFormPage,
   TransactionsPage,
   UserPage,
@@ -56,6 +57,7 @@ export default function Router() {
           children: [
             { element: <TransactionsPage />, index: true },
             { path: 'form', element: <TransactionFormPage /> },
+            { path: ':id', element: <TransactionDetailPage /> },
           ]
         },
         {
