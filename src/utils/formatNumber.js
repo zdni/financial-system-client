@@ -1,5 +1,18 @@
 import numeral from 'numeral'
 
+numeral.register('locale', 'idn', {
+  delimiters: {
+      thousands: '.',
+      decimal: ','
+  },
+  currency: {
+      symbol: 'Rp'
+  }
+});
+
+// switch between locales
+numeral.locale('idn');
+
 export function fNumber(number) {
   return numeral(number).format()
 }
