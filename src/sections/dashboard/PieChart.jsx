@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // @mui
-import { Card, CardHeader, Stack, TextField } from '@mui/material';
+import { Card, CardHeader, Stack, TextField, Typography } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 // components
 import Chart, { useChart } from '../../components/chart';
@@ -48,6 +48,7 @@ export default function PieChart() {
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(today);
   const [subheader, setSubheader] = useState('')
+  const [margin, setMargin] = useState(0);
   const [series, setSeries] = useState([
     { label: 'Income', value: 0 },
     { label: 'Expense', value: 0 },
@@ -118,7 +119,7 @@ export default function PieChart() {
               expense = expense + transaction.credit
             }
           })
-          
+          setMargin(income - expense);
           setSeries([
             { label: 'Income', value: income },
             { label: 'Expense', value: expense },
@@ -139,7 +140,16 @@ export default function PieChart() {
     <Card>
       <CardHeader 
         title='Margin' 
-        subheader={subheader} 
+        subheader={
+          <Stack sx={{ mt: 2 }}>
+            <Typography variant='subtitle2'>
+              {fCurrency(margin)}
+            </Typography>
+            <Typography variant='caption'>
+              {subheader}
+            </Typography>
+          </Stack>
+        } 
         action={
           <Stack spacing={1.5}>
             <DatePicker
