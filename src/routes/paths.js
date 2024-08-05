@@ -19,6 +19,7 @@ export const PATH_DASHBOARD = {
   transaction: {
     root: path(ROOTS_DASHBOARD, '/transaksi'),
     form: path(ROOTS_DASHBOARD, '/transaksi/form'),
+    export: path(ROOTS_DASHBOARD, '/transaksi/export')
   },
   user: {
     root: path(ROOTS_DASHBOARD, '/pengguna'),

@@ -100,7 +100,7 @@ export default function PieChart() {
       const endDateParse = Date.parse(endDate)
       const startDateParse = Date.parse(startDate);
   
-      const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDateParse, endDate: endDateParse, sort: 'date' } })
+      const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDateParse, endDate: endDateParse, sort: 'date', state: 'posted' } })
       const { data, message, status } = response;
       if(status) {
         let income = 0;

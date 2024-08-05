@@ -24,6 +24,7 @@ export const createTransaction = (data, config) => post(url.TRANSACTIONS, data, 
 export const updateTransaction = (id, data, config) =>  put(`${url.TRANSACTIONS}/${id}`, data, config)
 export const deleteTransaction = (id, config) =>  del(`${url.TRANSACTIONS}/${id}`, config)
 export const exportExcelTransaction = config =>  get(`${url.TRANSACTIONS}/export/xlsx`, config)
+export const exportPDFTransaction = config =>  get(`${url.TRANSACTIONS}/export/pdf`, config)
 
 //  .............................. TRANSACTION LINE ....................................
 export const getTransactionLines = config => get(url.TRANSACTION_LINE, config)
@@ -39,6 +40,10 @@ export const createAccount = (data, config) => post(url.ACCOUNTS, data, config)
 export const updateAccount = (id, data, config) =>  put(`${url.ACCOUNTS}/${id}`, data, config)
 export const deleteAccount = (id, config) => del(`${url.ACCOUNTS}/${id}`, config)
 
+//  .............................. DOCUMENT ....................................
+export const getDocuments = config => get(url.DOCUMENTS, config)
+export const deleteDocument = (id, config) => del(`${url.DOCUMENTS}/${id}`, config)
+
 //  .............................. VENDOR ....................................
 export const getVendors = config => get(url.VENDORS, config)
 export const getVendor = (id, config) => get(`${url.VENDORS}/${id}`, config)
@@ -46,5 +51,5 @@ export const createVendor = (data, config) => post(url.VENDORS, data, config)
 export const updateVendor = (id, data, config) =>  put(`${url.VENDORS}/${id}`, data, config)
 export const deleteVendor = (id, config) => del(`${url.VENDORS}/${id}`, config)
 
-//  .............................. VENDOR ....................................
+//  .............................. EXPORT ....................................
 export const downloadExcel = (file, config) => get(`${url.EXCEL}/${file}`, config)

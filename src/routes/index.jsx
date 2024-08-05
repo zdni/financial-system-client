@@ -13,6 +13,7 @@ import {
   AccountsPage,
   DashboardPage,
   TransactionDetailPage,
+  TransactionExportPage,
   TransactionFormPage,
   TransactionsPage,
   UserPage,
@@ -58,6 +59,7 @@ export default function Router() {
             { element: <TransactionsPage />, index: true },
             { path: 'form', element: <TransactionFormPage /> },
             { path: ':id', element: <TransactionDetailPage /> },
+            { path: 'export', element: <TransactionExportPage /> },
           ]
         },
         {

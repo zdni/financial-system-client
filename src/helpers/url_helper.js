@@ -19,3 +19,4 @@ export const TRANSACTIONS_GROUP = 'transactions/group'
 
 // EXPORT
 export const EXCEL = 'exports'
+export const DOCUMENTS = 'documents'

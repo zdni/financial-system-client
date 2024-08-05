@@ -114,7 +114,7 @@ export default function BarChart() {
     // filter start date and end date
     const date = Date.parse(day);
 
-    const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: date, endDate: date } })
+    const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: date, endDate: date, state: 'posted' } })
     setDataDashboard(response);
   }
 
@@ -129,7 +129,7 @@ export default function BarChart() {
     firstDay.setHours(offset,0,0);
     const startDate = Date.parse(firstDay);
 
-    const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDate, endDate: endDate, sort: 'date' } })
+    const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDate, endDate: endDate, sort: 'date', state: 'posted' } })
     setDataDashboard(response);
   }
 
@@ -141,7 +141,7 @@ export default function BarChart() {
     const endDate = Date.parse(today)
     const startDate = Date.parse(dateOneYearAgo);
 
-    const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDate, endDate: endDate, sort: 'date' } })
+    const response = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: startDate, endDate: endDate, sort: 'date', state: 'posted' } })
     setDataDashboard(response);
   }
 

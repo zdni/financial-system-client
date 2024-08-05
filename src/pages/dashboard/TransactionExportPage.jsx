@@ -1,28 +1,11 @@
-import { Helmet } from 'react-helmet-async'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 // mui
-import {
-  Button,
-  Card,
-  Container,
-  Divider,
-  IconButton,
-  Stack,
-  Tab,
-  Table,
-  TableBody,
-  TableContainer,
-  Tabs,
-  Tooltip,
-} from '@mui/material'
+import { Button, Card, Container, IconButton, Stack, Table, TableBody, TableContainer, Tooltip } from '@mui/material'
 // components
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs'
 import Iconify from '../../components/iconify'
-import Label from '../../components/label/Label'
 import Scrollbar from '../../components/scrollbar'
-import { useSettingsContext } from '../../components/settings'
-import { useSnackbar } from '../../components/snackbar'
 import {
   useTable,
   getComparator,
@@ -33,36 +16,38 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table'
+import { useSettingsContext } from '../../components/settings'
+import { useSnackbar } from '../../components/snackbar'
+// api
+import { 
+  getDocuments, 
+  deleteDocument,
+  exportExcelTransaction, 
+} from '../../helpers/backend_helper'
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths'
 // sections
 import { 
-  TableRow, 
-  TableToolbar 
+  ExportTransactionDialog,
+  TableRowExport, 
+  TableToolbarExport
 } from '../../sections/transaction'
 // utils
 import { isValidToken } from '../../auth/utils'
-import { fTimestamp } from '../../utils/formatTime'
-import { 
-  deleteTransaction,
-  getTransactions, 
-} from '../../helpers/backend_helper'
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'date', label: 'Tanggal', align: 'left' },
-  { id: 'name', label: 'Label', align: 'left' },
-  { id: 'state', label: 'Status', align: 'left' },
+  { id: 'label', label: 'Label', align: 'left' },
+  { id: 'type', label: 'Tipe', align: 'left' },
   { id: '' },
 ]
 
-export default function TransactionsPage() {
-  const TOKEN = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : ''
+export default function TransactionExportPage() {
   const { themeStretch } = useSettingsContext()
-  const { enqueueSnackbar } = useSnackbar()
 
-  const navigate = useNavigate()
+  const TOKEN = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : '';
+  const { enqueueSnackbar } = useSnackbar()
 
   const {
     dense,
@@ -87,59 +72,38 @@ export default function TransactionsPage() {
   const [tableData, setTableData] = useState([])
 
   // Filter Data
-  const [filterEndDate, setFilterEndDate] = useState(null)
   const [filterName, setFilterName] = useState('')
-  const [filterState, setFilterState] = useState('all')
-  const [filterStartDate, setFilterStartDate] = useState(null)
+  const [openExportDialog, setOpenExportDialog] = useState(false)
   
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
     filterName,
-    filterState,
-    filterEndDate,
-    filterStartDate,
   })
   
-  const isFiltered = filterName !== '' || filterState !== 'all' || (!!filterStartDate && !!filterEndDate);
+  const isFiltered = filterName !== '';
   const isNotFound = 
-    (!dataFiltered.length && !!filterName) ||
-    (!dataFiltered.length && !!filterState) ||
-    (!dataFiltered.length && !!filterEndDate) ||
-    (!dataFiltered.length && !!filterStartDate)
+    (!dataFiltered.length && !!filterName)
   
   const denseHeight = dense ? 56 : 76
 
-  const getLengthByState = (state) =>
-    tableData.filter((item) => item.state === state).length;
+  const handleOpenExportDialog = () => {
+    setOpenExportDialog(true)
+  }
+  const handleCloseExportDialog = () => setOpenExportDialog(false);
 
-  const TABS = [
-    { value: 'all', label: 'Semua', color: 'default', count: tableData.length },
-    { value: 'draft', label: 'Draft', color: 'success', count: getLengthByState('draft') },
-    { value: 'posted', label: 'Post', color: 'info', count: getLengthByState('posted') },
-    { value: 'cancel', label: 'Batal', color: 'warning', count: getLengthByState('cancel') },
-  ]
-
-  const handleFilterName = (event, newValue) => {
+  const handleFilterName = (event) => {
     setPage(0);
     setFilterName(event.target.value);
   }
 
-  const handleFilterState = (event, newValue) => {
-    setPage(0);
-    setFilterState(newValue);
-  }
-
   const handleResetFilter = () => {
-    setFilterEndDate(null)
     setFilterName('')
-    setFilterStartDate(null)
-    setFilterState('all')
   }
 
   const handleSubmitDelete = async (id) => {
     if(TOKEN && isValidToken(TOKEN)) {
-      const response = await deleteTransaction(id, { headers: { authorization: `Bearer ${TOKEN}` } })
+      const response = await deleteDocument(id, { headers: { authorization: `Bearer ${TOKEN}` } })
       enqueueSnackbar(response.data.message)
       setReload(true);
     } else {
@@ -149,26 +113,39 @@ export default function TransactionsPage() {
 
   const handleSubmitMultipleDelete = () => {
     selected.forEach(async (row) => {
-      const {_id, state, name} = row;
-      if(state === 'cancel') {
-        await handleSubmitDelete(_id)
-      } else {
-        enqueueSnackbar(`Gagal menghapus transaksi ${name} karena tidak dalam status Draft!`, { variant: 'error' });
-      }
+      const {_id} = row;
+      await handleSubmitDelete(_id)
     });
     setReload(true)
     setSelected([])
   }
 
+  const handleSubmitExport = async (data) => {
+    if(TOKEN && isValidToken(TOKEN)) {
+      if(data.export_type === 'pdf') {
+        // toPDF();
+      } else if(data.export_type === 'excel') {
+        const response = await exportExcelTransaction({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: Date.parse(data.start_date), endDate: Date.parse(data.end_date), sort: 'date' }})
+        enqueueSnackbar(response.data.message)
+      } else {
+        enqueueSnackbar("Aksi tidak tersedia!", { variant: "error" });
+      }
+      return { status: true }
+    } else {
+      enqueueSnackbar("TOKEN_REQUIRED", { variant: "error" });
+    }
+  }
+
   useEffect(() => {
     async function fetchData() {
       if(TOKEN && isValidToken(TOKEN)) {
-        const response = await getTransactions({ headers: { authorization: `Bearer ${TOKEN}` }, params: { sort: '-date' } })
-        setTableData(response.data.data)
+        const response = await getDocuments({ headers: { authorization: `Bearer ${TOKEN}` } })
+        setTableData(response.data.data);
       }
     }
+
     if(reload) {
-      fetchData()
+      fetchData();
       setReload(false)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -177,12 +154,12 @@ export default function TransactionsPage() {
   return (
     <>
       <Helmet>
-        <title> Daftar Transaksi | Cash Draw Simple Recording System</title>
+        <title> File Export | Cash Draw Simple Recording System</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <CustomBreadcrumbs
-          heading="Daftar Transaksi"
+          heading="File Export"
           links={[
             {
               name: 'Dashboard',
@@ -190,67 +167,32 @@ export default function TransactionsPage() {
             },
             {
               name: 'Transaksi',
+              href: PATH_DASHBOARD.transaction.root
+            },
+            {
+              name: 'File Export',
             },
           ]}
           action={
             <Stack spacing={1} direction={'row'}>
               <Button
                 variant="contained"
-                startIcon={<Iconify icon="eva:plus-fill" />}
-                onClick={() => navigate(`${PATH_DASHBOARD.transaction.form}`)}
+                color='success'
+                startIcon={<Iconify icon="lets-icons:export-duotone-line" />}
+                onClick={handleOpenExportDialog}
               >
-                Tambah Transaksi
+                Export
               </Button>
             </Stack>
             
           }
         />
 
-        <Card>
-          <Tabs
-            value={filterState}
-            onChange={handleFilterState}
-            sx={{
-              px: 2,
-              bgcolor: 'background.neutral',
-            }}
-          >
-            {TABS.map((tab) => (
-              <Tab
-                key={tab.value}
-                value={tab.value}
-                label={tab.label}
-                icon={
-                  <Label color={tab.color} sx={{ mr: 1 }}>
-                    {tab.count}
-                  </Label>
-                }
-              />
-            ))}
-          </Tabs>
-
-          <Divider />
-          
-          <TableToolbar
+        <Card sx={{ mt: 4 }}>
+          <TableToolbarExport
             isFiltered={isFiltered}
-            filterEndDate={filterEndDate}
             filterName={filterName}
-            filterStartDate={filterStartDate}
             onFilterName={handleFilterName}
-            onFilterEndDate={(newValue) => {
-              const date = new Date(newValue); 
-              const offset = new Date().getTimezoneOffset()/-60;
-              date.setHours(offset,0,0);
-              setFilterEndDate(date);
-            }}
-            onFilterStartDate={(newValue) => {
-              const date = new Date(newValue); 
-              const offset = new Date().getTimezoneOffset()/-60;
-              date.setHours(offset,0,0);
-                
-              setFilterStartDate(date);
-              console.log(fTimestamp(date));
-            }}
             onResetFilter={handleResetFilter}
           />
 
@@ -262,7 +204,7 @@ export default function TransactionsPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row)
+                  tableData.map((row) => row._id)
                 )
               }
               action={
@@ -288,7 +230,7 @@ export default function TransactionsPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row)
+                      tableData.map((row) => row._id)
                     )
                   }
                 />
@@ -296,15 +238,16 @@ export default function TransactionsPage() {
                 <TableBody>
                   {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => (
-                      <TableRow
+                    .map((row) => {
+                      return <TableRowExport
                         key={row._id}
                         row={row}
+                        onDeleteRow={() => handleSubmitDelete(row._id)}
                         setReload={setReload}
                         onSelectRow={() => onSelectRow(row._id)}
                         selected={selected.includes(row._id)}
                       />
-                    ))}
+                    })}
 
                   <TableEmptyRows
                     height={denseHeight}
@@ -329,6 +272,13 @@ export default function TransactionsPage() {
           />
         </Card>
       </Container>
+
+      <ExportTransactionDialog
+        open={openExportDialog} 
+        onClose={handleCloseExportDialog}
+        onSubmitForm={handleSubmitExport}
+        setReload={setReload}
+      />
     </>
   )
 }
@@ -338,10 +288,7 @@ export default function TransactionsPage() {
 function applyFilter({
   inputData,
   comparator,
-  filterEndDate,
   filterName,
-  filterStartDate,
-  filterState,
 }) {
   const stabilizedThis = inputData.map((el, index) => [el, index])
 
@@ -355,23 +302,8 @@ function applyFilter({
 
   if (filterName) {
     inputData = inputData.filter(
-      (data) =>
-        data.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (data) => data.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     )
-  }
-  if (filterState !== 'all') {
-    inputData = inputData.filter(
-      (data) =>
-        data.state === filterState
-    )
-  }
-
-  if (filterStartDate && filterEndDate) {
-    inputData = inputData.filter(
-      (invoice) =>
-        fTimestamp(invoice.date) >= fTimestamp(filterStartDate) &&
-        fTimestamp(invoice.date) <= fTimestamp(filterEndDate)
-    );
   }
 
   return inputData

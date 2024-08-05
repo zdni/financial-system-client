@@ -32,9 +32,10 @@ import {
 import { PATH_DASHBOARD } from '../../routes/paths'
 // sections
 import { 
-  FormTransactionDialog,
+  FormTransactionLineDialog,
   TableRowDetail, 
-  TableToolbarDetail
+  TableToolbarDetail,
+  TransactionFormUpdate
 } from '../../sections/transaction'
 // utils
 import { isValidToken } from '../../auth/utils'
@@ -201,6 +202,7 @@ export default function TransactionDetailPage() {
           expense: prevFinancial.expense + row.credit
         }))
       }
+      return true
     })
   } 
 
@@ -369,6 +371,7 @@ export default function TransactionDetailPage() {
                         setReload={setReload}
                         onSelectRow={() => onSelectRow(row._id)}
                         selected={selected.includes(row._id)}
+                        state={transaction?.state}
                       />
                     })}
 
@@ -395,27 +398,34 @@ export default function TransactionDetailPage() {
           />
         </Card>
 
-        <Card sx={{ mt: 4, p: 3 }}>
-          <Stack spacing={2}>
-            <Typography variant="h3">{fCurrency(financial.income - financial.expense)}</Typography>
+        <Grid container spacing={3} direction={'row'} sx={{ mt: 4 }}>
+          <Grid item sm={12} md={6}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={2}>
+                <Typography variant="h3">{fCurrency(financial.income - financial.expense)}</Typography>
 
-            <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Income
-              </Typography>
-              <Typography variant="body2">{fCurrency(financial.income)}</Typography>
-            </Stack>
-            <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Expense
-              </Typography>
-              <Typography variant="body2">{fCurrency(financial.expense)}</Typography>
-            </Stack>
-          </Stack>
-        </Card>
+                <Stack direction="row" justifyContent="space-between">
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Income
+                  </Typography>
+                  <Typography variant="body2">{fCurrency(financial.income)}</Typography>
+                </Stack>
+                <Stack direction="row" justifyContent="space-between">
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Expense
+                  </Typography>
+                  <Typography variant="body2">{fCurrency(financial.expense)}</Typography>
+                </Stack>
+              </Stack>
+            </Card>
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <TransactionFormUpdate data={transaction} />
+          </Grid>
+        </Grid>
       </Container>
 
-      <FormTransactionDialog 
+      <FormTransactionLineDialog 
         title='Ubah Transaksi'
         open={openFormDialog} 
         onClose={handleCloseFormDialog}

@@ -26,6 +26,7 @@ export const AccountsPage = Loadable(lazy(() => import('../pages/dashboard/Accou
 export const DashboardPage = Loadable(lazy(() => import('../pages/dashboard/DashboardPage')))
 export const TransactionFormPage = Loadable(lazy(() => import('../pages/dashboard/TransactionFormPage')))
 export const TransactionDetailPage = Loadable(lazy(() => import('../pages/dashboard/TransactionDetailPage')))
+export const TransactionExportPage = Loadable(lazy(() => import('../pages/dashboard/TransactionExportPage')))
 export const TransactionsPage = Loadable(lazy(() => import('../pages//dashboard/TransactionsPage')))
 export const UserPage = Loadable(lazy(() => import('../pages/dashboard/UserPage')))
 export const UsersPage = Loadable(lazy(() => import('../pages/dashboard/UsersPage')))

@@ -15,6 +15,7 @@ const ICONS = {
   transaction: icon('ic_calendar'),
   account: icon('ic_invoice'),
   vendor: icon('ic_label'),
+  export: icon('ic_external'),
 }
 
 const navConfig = [
@@ -25,6 +26,7 @@ const navConfig = [
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.root, icon: ICONS.master, roles: ['superadmin', 'admin', 'staff'] },
       { title: 'Transaksi', path: PATH_DASHBOARD.transaction.root, icon: ICONS.transaction, roles: ['superadmin', 'admin'] },
+      { title: 'Export', path: PATH_DASHBOARD.transaction.export, icon: ICONS.export, roles: ['superadmin', 'admin'] },
     ],
   },
 

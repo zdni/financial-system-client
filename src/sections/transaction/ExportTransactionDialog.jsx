@@ -16,7 +16,7 @@ import {
 import FormProvider, { RHFSelect, RHFDatePicker } from '../../components/hook-form'
 import { useSnackbar } from '../../components/snackbar'
 // helpers
-import { exportExcelTransaction } from '../../helpers/backend_helper'
+import { exportExcelTransaction, exportPDFTransaction } from '../../helpers/backend_helper'
 // utils
 import { isValidToken } from '../../auth/utils'
 
@@ -61,41 +61,22 @@ export default function FormDataDialog({
   } = methods
 
   const onSubmit = async (data) => {
-    const url = 'http://localhost:4000/01 Jul 2024-28 Jul 2024.xlsx';
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "sample.xlsx";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    // if(TOKEN && isValidToken(TOKEN)) {
-    //   if(data.export_type === 'pdf') {
-    //     // toPDF();
-    //   } else if(data.export_type === 'excel') {
-    //     const response = await exportExcelTransaction({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: Date.parse(data.start_date), endDate: Date.parse(data.end_date), sort: 'date' }})
-    //     enqueueSnackbar(response.data.message)
-    //   } else {
-    //     enqueueSnackbar("Aksi tidak tersedia!", { variant: "error" });
-    //   }
-    //   return { status: true }
-    // } else {
-    //   enqueueSnackbar("TOKEN_REQUIRED", { variant: "error" });
-    // }
-    // reset()
-    // onClose()
-    // setReload(true)
-    // const response = await onSubmitForm(data)
-    // const { status } = response
-
-    // if(status) {
-    //   reset()
-    //   onClose()
-    //   setReload(true)
-    // } else {
-    //   reset()
-    //   onClose()
-    // }
+    if(TOKEN && isValidToken(TOKEN)) {
+      if(data.export_type === 'pdf') {
+        const response = await exportPDFTransaction({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: Date.parse(data.start_date), endDate: Date.parse(data.end_date), sort: 'date', state: 'posted' }})
+        enqueueSnackbar(response.data.message)
+      } else if(data.export_type === 'excel') {
+        const response = await exportExcelTransaction({ headers: { authorization: `Bearer ${TOKEN}` }, params: { startDate: Date.parse(data.start_date), endDate: Date.parse(data.end_date), sort: 'date', state: 'posted' }})
+        enqueueSnackbar(response.data.message)
+      } else {
+        enqueueSnackbar("Aksi tidak tersedia!", { variant: "error" });
+      }
+    } else {
+      enqueueSnackbar("TOKEN_REQUIRED", { variant: "error" });
+    }
+    reset()
+    onClose()
+    setReload(true)
   }
 
   return (
