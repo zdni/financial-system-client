@@ -88,6 +88,7 @@ export default function TransactionForm() {
     status = response.data.status;
 
     if(status && transactionId) {
+      let hasError = false;
       for(const index in transactions) {
         const transaction = {
           date: transactions[index].date,
@@ -101,18 +102,22 @@ export default function TransactionForm() {
         }
   
         const response = await createTransactionLine(transaction, { headers: { authorization: `Bearer ${TOKEN}` } })
-        if(!status) {
+        if(!response.data.status) {
           message = response.data.message
           options = { variant: 'error' }
+          hasError = true;
         }
+      }
+      
+      enqueueSnackbar(message, options)
+      if(!hasError) {
+        reset()
+        navigate(`${PATH_DASHBOARD.transaction.root}/${transactionId}`)
       }
     } else {
       options = { variant: 'error' }
+      enqueueSnackbar(message, options)
     }
-
-    enqueueSnackbar(message, options)
-    reset()
-    navigate(`${PATH_DASHBOARD.transaction.root}`)
   }
 
   const transaction = {

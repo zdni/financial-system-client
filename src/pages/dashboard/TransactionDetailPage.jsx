@@ -186,6 +186,24 @@ export default function TransactionDetailPage() {
     return { message: "TOKEN_REQUIRED", status: false }
   }
 
+  const calculateFinancial = (rows) => {
+    setFinancial({ income: 0, expense: 0 });
+    rows.map((row) => {
+      if(row.accountId?.account_type === 'income') {
+        setFinancial((prevFinancial) => ({
+          ...prevFinancial,
+          income: prevFinancial.income + row.debit
+        }))
+      }
+      if(row.accountId?.account_type === 'expense') {
+        setFinancial((prevFinancial) => ({
+          ...prevFinancial,
+          expense: prevFinancial.expense + row.credit
+        }))
+      }
+    })
+  } 
+
   useEffect(() => {
     async function fetchData() {
       let options = {};
@@ -197,10 +215,11 @@ export default function TransactionDetailPage() {
       if(status) {
         setTransaction(data);
         
-        const transactions = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` } });
+        const transactions = await getTransactionLines({ headers: { authorization: `Bearer ${TOKEN}` }, params: { transactionId: id } });
         
         if(transactions.data.status) {
           setTableData(transactions.data.data);
+          calculateFinancial(transactions.data.data);
         } else {
           message = transactions.data.message;
           options = { variant: 'error' }

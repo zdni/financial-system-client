@@ -160,8 +160,8 @@ const TransactionFormLine = ({ data, deleteRow, form, remove, setComplete, setDe
         color="error"
         sx={{ flexShrink: 0 }}
         onClick={() => {
-          const rows = [...deleteRow, transaction._id]
-          setDeleteRow(rows); 
+          // const rows = [...deleteRow, transaction._id]
+          // setDeleteRow(rows); 
           remove(); 
         }}
         startIcon={<Iconify icon="eva:trash-2-outline" />}
