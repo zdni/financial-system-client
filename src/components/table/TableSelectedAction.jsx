@@ -4,7 +4,6 @@ import { Checkbox, Typography, Stack } from '@mui/material'
 // ----------------------------------------------------------------------
 
 export default function TableSelectedAction({
-  dense,
   action,
   rowCount,
   numSelected,
@@ -27,12 +26,9 @@ export default function TableSelectedAction({
         left: 0,
         width: 1,
         zIndex: 9,
-        height: 58,
+        height: 38,
         position: 'absolute',
         bgcolor: 'primary.lighter',
-        ...(dense && {
-          height: 38,
-        }),
         ...sx,
       }}
       {...other}
@@ -48,12 +44,9 @@ export default function TableSelectedAction({
       <Typography
         variant="subtitle1"
         sx={{
-          ml: 2,
+          ml: 3,
           flexGrow: 1,
           color: 'primary.main',
-          ...(dense && {
-            ml: 3,
-          }),
         }}
       >
         {numSelected} selected

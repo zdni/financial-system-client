@@ -50,7 +50,6 @@ export default function TransactionExportPage() {
   const { enqueueSnackbar } = useSnackbar()
 
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -63,7 +62,6 @@ export default function TransactionExportPage() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: 'name' })
@@ -85,7 +83,7 @@ export default function TransactionExportPage() {
   const isNotFound = 
     (!dataFiltered.length && !!filterName)
   
-  const denseHeight = dense ? 56 : 76
+  const denseHeight = 56
 
   const handleOpenExportDialog = () => {
     setOpenExportDialog(true)
@@ -198,7 +196,6 @@ export default function TransactionExportPage() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -219,7 +216,7 @@ export default function TransactionExportPage() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table size='small' sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -266,9 +263,6 @@ export default function TransactionExportPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
           />
         </Card>
       </Container>

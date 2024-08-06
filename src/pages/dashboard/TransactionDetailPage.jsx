@@ -74,7 +74,6 @@ export default function TransactionDetailPage() {
   const handleCloseFormDialog = () => setOpenFormDialog(false)
 
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -87,7 +86,6 @@ export default function TransactionDetailPage() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: 'name' })
@@ -111,7 +109,7 @@ export default function TransactionDetailPage() {
     (!dataFiltered.length && !!filterAccount) ||
     (!dataFiltered.length && !!filterVendor)
   
-  const denseHeight = dense ? 56 : 76
+  const denseHeight = 56
 
   const handleFilterAccount = (event) => {
     setPage(0);
@@ -322,7 +320,6 @@ export default function TransactionDetailPage() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -343,7 +340,7 @@ export default function TransactionDetailPage() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table size='small' sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -392,9 +389,6 @@ export default function TransactionDetailPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
           />
         </Card>
 

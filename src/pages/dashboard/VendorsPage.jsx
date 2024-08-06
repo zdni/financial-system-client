@@ -58,7 +58,6 @@ export default function VendorsPage() {
   const { enqueueSnackbar } = useSnackbar()
 
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -71,7 +70,6 @@ export default function VendorsPage() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: 'name' })
@@ -96,7 +94,7 @@ export default function VendorsPage() {
   const isFiltered = filterRole !== 'all' || filterName !== ''
   const isNotFound = (!dataFiltered.length && !!filterName) || (!dataFiltered.length && !!filterRole)
   
-  const denseHeight = dense ? 56 : 76
+  const denseHeight = 56
 
   const handleOpenFormDialog = () => {
     setData(false)
@@ -211,7 +209,6 @@ export default function VendorsPage() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -232,7 +229,7 @@ export default function VendorsPage() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table size='small' sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -280,9 +277,6 @@ export default function VendorsPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
           />
         </Card>
       </Container>

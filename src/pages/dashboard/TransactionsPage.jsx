@@ -65,7 +65,6 @@ export default function TransactionsPage() {
   const navigate = useNavigate()
 
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -78,7 +77,6 @@ export default function TransactionsPage() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: 'name' })
@@ -108,7 +106,7 @@ export default function TransactionsPage() {
     (!dataFiltered.length && !!filterEndDate) ||
     (!dataFiltered.length && !!filterStartDate)
   
-  const denseHeight = dense ? 56 : 76
+  const denseHeight = 56
 
   const getLengthByState = (state) =>
     tableData.filter((item) => item.state === state).length;
@@ -256,7 +254,6 @@ export default function TransactionsPage() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -277,7 +274,7 @@ export default function TransactionsPage() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table size='small' sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -323,9 +320,6 @@ export default function TransactionsPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
           />
         </Card>
       </Container>

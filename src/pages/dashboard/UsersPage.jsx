@@ -66,7 +66,6 @@ export default function UsersPage() {
   const { enqueueSnackbar } = useSnackbar()
 
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -79,7 +78,6 @@ export default function UsersPage() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: 'name' })
@@ -114,7 +112,7 @@ export default function UsersPage() {
     { value: 'staff', label: 'Staf', color: 'info', count: getLengthByRole('staff') },
   ]
 
-  const denseHeight = dense ? 56 : 76
+  const denseHeight = 56
 
   const handleOpenFormDialog = () => {
     setData(false)
@@ -292,7 +290,6 @@ export default function UsersPage() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -323,7 +320,7 @@ export default function UsersPage() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table size='small' sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -372,9 +369,6 @@ export default function UsersPage() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
           />
         </Card>
       </Container>
