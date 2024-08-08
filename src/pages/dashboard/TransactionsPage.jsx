@@ -300,6 +300,7 @@ export default function TransactionsPage() {
                         setReload={setReload}
                         onSelectRow={() => onSelectRow(row._id)}
                         selected={selected.includes(row._id)}
+                        onDeleteRow={() => handleSubmitDelete(row._id)}
                       />
                     ))}
 

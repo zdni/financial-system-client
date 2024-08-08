@@ -26,7 +26,8 @@ import {
   updateTransaction,
   getTransactionLines,
   updateTransactionLine, 
-  deleteTransactionLine, 
+  deleteTransactionLine,
+  createTransactionLine, 
 } from '../../helpers/backend_helper'
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths'
@@ -72,6 +73,7 @@ export default function TransactionDetailPage() {
 
   const [openFormDialog, setOpenFormDialog] = useState(false)
   const handleCloseFormDialog = () => setOpenFormDialog(false)
+  const [title, setTitle] = useState("Ubah")
 
   const {
     page,
@@ -111,6 +113,16 @@ export default function TransactionDetailPage() {
   
   const denseHeight = 56
 
+  const handleOpenFormDialog = () => {
+    setData({
+      date: transaction?.date,
+      transactionId: { _id: id },
+      userId: transaction?.userId,
+    })
+    setTitle('Tambah')
+    setOpenFormDialog(true)
+  }
+
   const handleFilterAccount = (event) => {
     setPage(0);
     setFilterAccount(event.target.value);
@@ -124,6 +136,14 @@ export default function TransactionDetailPage() {
   const handleResetFilter = () => {
     setFilterAccount('')
     setFilterVendor('')
+  }
+
+  const handleSubmitCreate = async (data) => {
+    if(TOKEN && isValidToken(TOKEN)) {
+      const response = await createTransactionLine(data, { headers: { authorization: `Bearer ${TOKEN}` } })
+      return { ...response.data, code: response.status}
+    }
+    return { message: "TOKEN_REQUIRED", status: false }
   }
 
   const handleSubmitDelete = async (id) => {
@@ -173,6 +193,7 @@ export default function TransactionDetailPage() {
   }
 
   const handleEditRow = (data) => {
+    setTitle('Ubah')
     setData(data)
     setOpenFormDialog(true)
   }
@@ -263,6 +284,19 @@ export default function TransactionDetailPage() {
               name: transaction?.name,
             },
           ]}
+          action={
+            <Stack spacing={1} direction={'row'}>
+              <Button
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+                onClick={handleOpenFormDialog}
+                disabled={transaction?.state !== 'draft'}
+              >
+                Tambah Transaksi
+              </Button>
+            </Stack>
+            
+          }
         />
 
         <Grid container justifyContent={'space-between'}>
@@ -420,10 +454,10 @@ export default function TransactionDetailPage() {
       </Container>
 
       <FormTransactionLineDialog 
-        title='Ubah Transaksi'
+        title={`${title} Transaksi`}
         open={openFormDialog} 
         onClose={handleCloseFormDialog}
-        onSubmitForm={handleSubmitUpdate}
+        onSubmitForm={title === 'Ubah' ? handleSubmitUpdate : handleSubmitCreate}
         data={data}
         setReload={setReload}
       />
