@@ -39,6 +39,9 @@ export default function FormDataDialog({
   
   const FormSchema = Yup.object().shape({
     date: Yup.date().required('Tanggal Wajib Diisi!'),
+    accountId: Yup.string().required('Akun Wajib Dipilih!'),
+    label: Yup.string().required('Label Wajib Diisi!'),
+    transactionId: Yup.string().required('Transaksi ID Wajib Dipilih!'),
   })
   
   const defaultValues = { 
@@ -119,6 +122,7 @@ export default function FormDataDialog({
           <Stack spacing={1}>
             <RHFTextField name="label" label="Label" />
             <RHFSelectDepend name="accountId" label="Akun" depend={(value) => onChangeAccount(value)}>
+              <option key="" value=""> -- Pilih Akun -- </option>
               {accounts.map((option) => (
                 <option key={option._id} value={option._id}>
                   {option.name}
@@ -126,15 +130,15 @@ export default function FormDataDialog({
               ))}
             </RHFSelectDepend>
             <RHFSelect name="vendorId" label="Vendor">
-              <option key='' value=''></option>
+              <option key='' value=''>-- Pilih Vendor --</option>
               {vendors.map((option) => (
                 <option key={option._id} value={option._id}>
                   {option.name}
                 </option>
               ))}
             </RHFSelect>
-            <RHFTextField name="debit" label="Income" disabled={ accountType === 'expense' } />
-            <RHFTextField name="credit" label="Expense" disabled={ accountType === 'income' } />
+            <RHFTextField name="debit" label="Income" disabled={ accountType !== 'income' } />
+            <RHFTextField name="credit" label="Expense" disabled={ accountType !== 'expense' } />
           </Stack>
         </DialogContent>
 
