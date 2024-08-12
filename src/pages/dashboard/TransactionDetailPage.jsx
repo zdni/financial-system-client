@@ -447,7 +447,7 @@ export default function TransactionDetailPage() {
             </Card>
           </Grid>
           <Grid item sm={12} md={6}>
-            <TransactionFormUpdate data={transaction} />
+            <TransactionFormUpdate setData={setTransaction} data={transaction} />
           </Grid>
         </Grid>
       </Container>

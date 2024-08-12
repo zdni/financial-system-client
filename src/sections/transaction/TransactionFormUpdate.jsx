@@ -17,7 +17,7 @@ import { updateTransaction } from '../../helpers/backend_helper';
 
 // ----------------------------------------------------------------------
 
-export default function TransactionFormUpdate({ data }) {
+export default function TransactionFormUpdate({ data, setData }) {
   const TOKEN = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : ''
   const { enqueueSnackbar } = useSnackbar()
 
@@ -72,7 +72,7 @@ export default function TransactionFormUpdate({ data }) {
           <DatePicker
             label="Tanggal Transaksi"
             value={transactionDate}
-            onChange={(value) => { setTransactionDate(value) }}
+            onChange={(value) => { setTransactionDate(value); setData({ ...transaction, date: value }) }}
             disabled={data?.state === 'posted'}
             renderInput={(params) => (
               <TextField
