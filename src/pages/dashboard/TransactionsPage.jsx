@@ -135,9 +135,10 @@ export default function TransactionsPage() {
     setFilterState('all')
   }
 
-  const handleSubmitDelete = async (id) => {
+  const handleSubmitDelete = async (row) => {
+    const {_id} = row;
     if(TOKEN && isValidToken(TOKEN)) {
-      const response = await deleteTransaction(id, { headers: { authorization: `Bearer ${TOKEN}` } })
+      const response = await deleteTransaction(_id, { headers: { authorization: `Bearer ${TOKEN}` } })
       enqueueSnackbar(response.data.message)
       setReload(true);
     } else {
@@ -147,11 +148,11 @@ export default function TransactionsPage() {
 
   const handleSubmitMultipleDelete = () => {
     selected.forEach(async (row) => {
-      const {_id, state, name} = row;
+      const {state, name} = row;
       if(state === 'posted') {
         enqueueSnackbar(`Gagal menghapus transaksi ${name} karena dalam status Post!`, { variant: 'error' });
       } else {
-        await handleSubmitDelete(_id)
+        await handleSubmitDelete(row);
       }
     });
     setReload(true)
@@ -298,9 +299,9 @@ export default function TransactionsPage() {
                         key={row._id}
                         row={row}
                         setReload={setReload}
-                        onSelectRow={() => onSelectRow(row._id)}
-                        selected={selected.includes(row._id)}
-                        onDeleteRow={() => handleSubmitDelete(row._id)}
+                        onSelectRow={() => onSelectRow(row)}
+                        selected={selected.includes(row)}
+                        onDeleteRow={() => handleSubmitDelete(row)}
                       />
                     ))}
 

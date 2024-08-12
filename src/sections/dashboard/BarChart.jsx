@@ -24,7 +24,7 @@ export default function BarChart() {
   const offset = new Date().getTimezoneOffset()/-60;
   
   const [categories, setCategories] = useState([])
-  const [filter, setFilter] = useState('day')
+  const [filter, setFilter] = useState('this_month')
   const [series, setSeries] = useState([
     {
       name: 'Income',
