@@ -157,12 +157,11 @@ export default function TransactionDetailPage() {
   }
 
   const handleSubmitMultipleDelete = () => {
-    selected.forEach(async (row) => {
-      const {_id} = row;
-      await handleSubmitDelete(_id)
-      if(transaction.state === 'cancel') {
-      } else {
+    selected.forEach(async (id) => {
+      if(transaction.state === 'posted') {
         enqueueSnackbar(`Gagal menghapus transaksi ${transaction.name} karena tidak dalam status Draft!`, { variant: 'error' });
+      } else {
+        await handleSubmitDelete(id)
       }
     });
     setReload(true)

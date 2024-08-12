@@ -41,10 +41,11 @@ export default function TableRowDetail({
   const handleCloseConfirm = () => setOpenConfirm(false)
 
   const handleOpenPopover = (event) => {
-    if(state === 'draft') {
-      setOpenPopover(event.currentTarget)
+    console.log(state)
+    if(state === 'posted') {
+      enqueueSnackbar(`Tidak dapat mengubah baris transaksi karena dalam status Post!`, { variant: 'warning' });
     } else {
-      enqueueSnackbar(`Tidak dapat mengubah baris transaksi karena tidak dalam status Draft!`, { variant: 'warning' });
+      setOpenPopover(event.currentTarget)
     }
   }
   const handleClosePopover = () => setOpenPopover(null)

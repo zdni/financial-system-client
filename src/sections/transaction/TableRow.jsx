@@ -115,10 +115,10 @@ export default function UserTableRow({
 
         <MenuItem
           onClick={() => {
-            if(row.state === 'cancel') {
-              handleOpenConfirm()
+            if(row.state === 'posted') {
+              enqueueSnackbar("Transaksi harus dalam status Draft atau Batal untuk menghapus!", { variant: 'error' });
             } else {
-              enqueueSnackbar("Batalkan Transaksi untuk menghapus!", { variant: 'error' });
+              handleOpenConfirm()
             }
             handleClosePopover()
           }}

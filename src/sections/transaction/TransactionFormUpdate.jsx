@@ -73,7 +73,7 @@ export default function TransactionFormUpdate({ data }) {
             label="Tanggal Transaksi"
             value={transactionDate}
             onChange={(value) => { setTransactionDate(value) }}
-            disabled={data?.state !== 'draft'}
+            disabled={data?.state === 'posted'}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -87,7 +87,7 @@ export default function TransactionFormUpdate({ data }) {
             type="submit"
             variant="contained"
             loading={isSubmitting}
-            disabled={data?.state !== 'draft'}
+            disabled={data?.state === 'posted'}
           >
             Ubah Tanggal
           </LoadingButton>

@@ -148,10 +148,10 @@ export default function TransactionsPage() {
   const handleSubmitMultipleDelete = () => {
     selected.forEach(async (row) => {
       const {_id, state, name} = row;
-      if(state === 'cancel') {
-        await handleSubmitDelete(_id)
+      if(state === 'posted') {
+        enqueueSnackbar(`Gagal menghapus transaksi ${name} karena dalam status Post!`, { variant: 'error' });
       } else {
-        enqueueSnackbar(`Gagal menghapus transaksi ${name} karena tidak dalam status Draft!`, { variant: 'error' });
+        await handleSubmitDelete(_id)
       }
     });
     setReload(true)
