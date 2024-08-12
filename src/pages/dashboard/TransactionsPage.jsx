@@ -79,7 +79,7 @@ export default function TransactionsPage() {
     onSort,
     onChangePage,
     onChangeRowsPerPage,
-  } = useTable({ defaultOrderBy: 'name' })
+  } = useTable({ defaultOrderBy: 'date' })
 
   const [reload, setReload] = useState(true)
   const [tableData, setTableData] = useState([])
